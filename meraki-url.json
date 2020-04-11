@@ -1,5 +1,5 @@
 {
-  "url" : {
+  "meraki-url" : {
     "description" : "Add geoip & ASN info, parse user agent for URL type logs",
     "version" : 1,
     "processors" : [
