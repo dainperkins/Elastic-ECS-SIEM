@@ -16,3 +16,8 @@ configs for pulling asset information from the Meraki Dashboard API, an enrichme
 and an Elastic ingest pipeline for handling geoip, asn, and meraki asset enrichment for
 observers (when Meraki devices are reporting as observers) and hosts (for e.g. 1x login)
 etc.)
+
+Some day I'll add some dashboards.
+
+Theres also a logstash directory that I'll put snippets in, currently (Thanks Derek) theres
+a ruby implementastion of the general network community_id processor.
