@@ -1,0 +1,130 @@
+PUT /_ingest/pipeline/meraki
+{
+    "description" : "Add geoip & ASN info, parse user agent for URL type logs, enrich with meraki dashboard info",
+    "processors" : [
+    { 
+      "enrich": { 
+        "policy_name": "meraki", 
+        "field": "observer.name", 
+        "target_field": "observer", 
+        "ignore_missing" : true,
+        "on_failure" : [
+          {
+            "set" : {
+              "field" : "error",
+              "value" : "{{ _ingest.on_failure_message }}"
+            }
+          }
+        ]
+      } 
+    }, 
+    { 
+      "enrich": { 
+        "policy_name": "meraki", 
+        "field": "host.name", 
+        "target_field": "host", 
+        "ignore_missing" : true,
+        "on_failure" : [
+          {
+            "set" : {
+              "field" : "error",
+              "value" : "{{ _ingest.on_failure_message }}"
+            }
+          }
+        ]
+      } 
+    }, 
+      {
+        "geoip" : {
+          "if" : "ctx.source?.geo == null",
+          "field" : "source.ip",
+          "target_field" : "source.geo",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "if" : "ctx.destination?.geo == null",
+          "field" : "destination.ip",
+          "target_field" : "destination.geo",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "if" : "ctx.source?.as == null",
+          "field" : "source.ip",
+          "target_field" : "source.as",
+          "properties" : [
+            "asn",
+            "organization_name"
+          ],
+          "ignore_missing" : true,
+          "database_file" : "GeoLite2-ASN.mmdb"
+        }
+      },
+      {
+        "geoip" : {
+          "if" : "ctx.destination?.as == null",
+          "database_file" : "GeoLite2-ASN.mmdb",
+          "field" : "destination.ip",
+          "target_field" : "destination.as",
+          "properties" : [
+            "asn",
+            "organization_name"
+          ],
+          "ignore_missing" : true
+        }
+      },
+      {
+        "rename" : {
+          "ignore_missing" : true,
+          "field" : "source.as.asn",
+          "target_field" : "source.as.number"
+        }
+      },
+      {
+        "rename" : {
+          "ignore_missing" : true,
+          "field" : "source.as.organization_name",
+          "target_field" : "source.as.organization.name"
+        }
+      },
+      {
+        "rename" : {
+          "ignore_missing" : true,
+          "field" : "destination.as.asn",
+          "target_field" : "destination.as.number"
+        }
+      },
+      {
+        "rename" : {
+          "ignore_missing" : true,
+          "field" : "destination.as.organization_name",
+          "target_field" : "destination.as.organization.name"
+        }
+      },
+      {
+        "user_agent" : {
+          "ignore_missing" : true,
+          "field" : "useragent"
+        }
+      },
+      {
+        "remove" : {
+          "ignore_missing" : true,
+          "field" : "useragent"
+        }
+      }
+    ],
+    "on_failure" : [
+      {
+        "set" : {
+          "field" : "error.message",
+          "value" : "{{ _ingest.on_failure_message }}"
+        }
+      }
+    ]
+  }
+  
+
