@@ -15,7 +15,7 @@ PUT /_enrich/policy/meraki
 	    "geo.region_name",
 	    "mac",
 	    "os.family",
-	    "os.ful",
+	    "os.full",
 	    "os.version",
 	    "product",
 	    "serial"
