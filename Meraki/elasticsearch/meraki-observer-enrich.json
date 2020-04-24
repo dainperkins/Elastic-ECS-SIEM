@@ -1,0 +1,25 @@
+PUT /_enrich/policy/meraki-observer
+{ 
+  "match": { 
+    "indices": [ 
+      "ecs-asset-meraki"  
+    ], 
+    "match_field": "name", 
+    "enrich_fields": [  
+      "geo.city_name",
+	    "geo.continent_name",
+	    "geo.country_iso_code",
+	    "geo.location",
+	    "geo.name",
+	    "geo.region_iso_code",
+	    "geo.region_name",
+	    "ip",
+	    "mac",
+	    "os.family",
+	    "os.full",
+	    "os.version",
+	    "product",
+	    "serial"
+    ] 
+  } 
+}

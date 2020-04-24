@@ -1,4 +1,4 @@
-PUT /_enrich/policy/meraki
+PUT /_enrich/policy/meraki-host
 { 
   "match": { 
     "indices": [ 
@@ -13,12 +13,11 @@ PUT /_enrich/policy/meraki
 	    "geo.name",
 	    "geo.region_iso_code",
 	    "geo.region_name",
+	    "ip",
 	    "mac",
 	    "os.family",
 	    "os.full",
-	    "os.version",
-	    "product",
-	    "serial"
+	    "os.version"
     ] 
   } 
 }

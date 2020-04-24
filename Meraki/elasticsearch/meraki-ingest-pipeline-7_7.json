@@ -1,10 +1,10 @@
 PUT /_ingest/pipeline/meraki
 {
-    "description" : "Add geoip & ASN info, parse user agent for URL type logs, enrich with meraki dashboard info",
+    "description" : "Add geoip & ASN info, parse user agent for URL type logs",
     "processors" : [
     { 
       "enrich": { 
-        "policy_name": "meraki", 
+        "policy_name": "meraki-observer", 
         "field": "observer.name", 
         "target_field": "observer", 
         "ignore_missing" : true,
@@ -20,7 +20,7 @@ PUT /_ingest/pipeline/meraki
     }, 
     { 
       "enrich": { 
-        "policy_name": "meraki", 
+        "policy_name": "meraki-host", 
         "field": "host.name", 
         "target_field": "host", 
         "ignore_missing" : true,
@@ -44,7 +44,7 @@ PUT /_ingest/pipeline/meraki
       },
       {
         "geoip" : {
-          "if" : "ctx.destination?.geo == null",
+          "if" : "ctx.source?.geo == null",
           "field" : "destination.ip",
           "target_field" : "destination.geo",
           "ignore_missing" : true
@@ -126,5 +126,3 @@ PUT /_ingest/pipeline/meraki
       }
     ]
   }
-  
-
