@@ -7,3 +7,4 @@ information provided.
 To do:
 + Client Enrichment - polling api for clients periodically
 + Network Enrichment (e.g. internal subnets) I think this can come from mx info
++ Make sure everything that can has network community id - syslog flow records & urls are set
