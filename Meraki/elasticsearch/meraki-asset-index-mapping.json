@@ -1,7 +1,7 @@
-PUT _template/asset-ecs
+PUT _template/assets-ecs
 {
   "index_patterns": [
-    "asset-ecs*"
+    "assets-ecs*"
   ],
      "settings" : {
       "index" : {
