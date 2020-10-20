@@ -1,0 +1,55 @@
+## aggregation to remove empty buckets & account for counter rollovers
+
+"aggs": {
+            "2": {
+              "terms": {
+                "field": "prometheus.labels.gc",
+                "size": 750,
+                "min_doc_count": 2
+              },
+              "aggs": {
+                "histogram": {
+                  "date_histogram": {
+                    "field": "@timestamp",
+                    "interval": "minute",
+                    "keyed": false
+                  },
+                  "aggs": {
+                    "the_movsum": {
+                      "moving_fn": {
+                        "buckets_path": "max",
+                        "window": 2,
+                        "script": "return values.length > 1 ? values[1] - values[0] : 0",
+                        "shift": 1
+                      }
+                    },
+                    "max": {
+                      "max": {
+                        "field": "prometheus.metrics.jvm_gc_collection_seconds_sum"
+                      }
+                    },
+                    "derivative": {
+                      "derivative": {"buckets_path": "max"}
+                    },
+                    "kick_out_low_scores": {
+                      "bucket_selector": {
+                        "buckets_path": {"sum": "the_movsum"},
+                        "script": "params.sum >= 0.01"
+                      }
+                    }
+                  }
+                },
+                "kick_out_low_scores": {
+                  "bucket_selector": {
+                    "buckets_path": {
+                      "count": "histogram._bucket_count"
+                    },
+                    "script": "params.count > 0"
+                  }
+                }
+              }
+            },
+            "final_count": {
+              "stats_bucket": {"buckets_path": "2._count"}
+            }
+          }
