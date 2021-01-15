@@ -1,0 +1,22 @@
+[
+  {
+    "set": {
+      "field": "temp.communityString",
+      "value": "{{network.transport}},{{source.ip}},{{destination.ip}},{{source.port}},{{destination.port}}",
+      "description": "set temp community_id tuple"
+    }
+  },
+  {
+    "community_id": {
+      "field": "temp.communityString",
+      "target_field": "network.community_id",
+      "description": "calculate community_id"
+    }
+  },
+  {
+    "remove": {
+      "field": "temp.communityString",
+      "description": "remove temp community_id tuple"
+    }
+  }
+]
