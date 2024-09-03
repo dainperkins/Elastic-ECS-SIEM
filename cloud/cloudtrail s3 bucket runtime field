@@ -1,0 +1,17 @@
+if (doc.containsKey('aws.cloudtrail.flattened.request_parameters')) {
+  def jsonField = doc['aws.cloudtrail.flattened.request_parameters'][0];
+  def bucketName = null;
+  
+  if (jsonField != null) {
+    for (def entry : jsonField.entrySet()) {
+      if (entry.getKey() == 'bucketName') {
+        bucketName = entry.getValue();
+        break;
+      }
+    }
+    
+    if (bucketName != null) {
+      ctx._source['aws.s3.bucket.name'] = bucketName;
+    }
+  }
+}
